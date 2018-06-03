@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Github Profile Finder</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+	
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.1.1/darkly/bootstrap.min.css">
+	<style>
+		a,a.btn.btn-info{ color: white; }
+		a.btn.btn-info:hover{color: white;background: green;}
+	}
+	.panel-body img{ height: : 100%; }
+	</style>
+</head>
+<body>
+	<nav class="navbar navbar-dark bg-primary">
+		<div class="container">
+			<h3>Github Profile Finder </h3>
+			<span><a href="https://developer.github.com/v3/">with  Github API</a> </span>
+		</div>
+	</nav>
+	<br>
+	<section id="content">
+		<div class="container">
+			<form  id="userForm" >
+				<div class="form-group">
+					<label for="username">Github Username: </label>
+					<input type="text"id="username"  class="form-control" aria-describedby="username" placeholder="Enter username">
+				</div>
+			</form>
+				<div id="profile"></div>
+		</div>
+	</section>
+	
+
+	
+	<script>
+		function getProfile(e) {
+			e.preventDefault();
+			console.log('Fethcing .... ');
+
+			var username = document.getElementById('username').value;
+			if(!username || username == ''){
+				username = 'mxgtech';
+			}
+			var xhttp = new XMLHttpRequest();
+			xhttp.onreadystatechange = function() {
+
+			if (xhttp.readyState == 4 && xhttp.status == 200) {
+			var user = JSON.parse(xhttp.responseText);
+			document.getElementById("profile").innerHTML =
+				`<div class="panel panel-default">
+				  <div class="panel-heading">
+				    <h3 class="panel-title">${user.login}</h3>
+				  </div>
+				  <div class="panel-body">
+				  	<div class="row">
+				  		<div class="col-md-3">
+				  			<img src="${user.avatar_url}" width="100">
+				  		</div>
+			  			<div class="col-md-9">
+			  				<span class="badge badge-success">Public repos:  Public repos ${user.public_repos}</span>
+ 
+
+								<ul class="list-group">
+									<li class="list-group-item">Website: ${user.website}</li>
+									<li class="list-group-item">Email: ${user.email}</li>
+									<li class="list-group-item">Location: ${user.location} </li>
+								</ul>
+								<br/>
+				     		<a href="${user.html_url}" class="btn btn-info" target="_blank">Visit Github Page</a>
+				  		</div>
+				  	</div>
+				  </div>
+				</div>`
+
+			}
+		};
+			xhttp.open("GET", "https://api.github.com/users/" + username, true);
+			xhttp.send();
+		}
+
+		document.getElementById("userForm").addEventListener('submit', getProfile, false);
+		// getProfile();
+
+
+	</script>
+	
+</body>
+</html>
